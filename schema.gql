@@ -1,0 +1,52 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input DataExistedInputs {
+  email: String!
+  password: String!
+}
+
+input DataLoginInputs {
+  email: String!
+  password: String!
+}
+
+input DataRegisterInputs {
+  email: String!
+  name: String!
+  password: String!
+}
+
+input DataUpdateInputs {
+  email: String!
+  name: String!
+  password: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Mutation {
+  deleteUser(deleteUser: DataExistedInputs!): User!
+  login(login: DataLoginInputs!): User!
+  register(register: DataRegisterInputs!): User!
+  updateUser(existedData: DataExistedInputs!, updatedData: DataUpdateInputs!): User!
+}
+
+type Query {
+  getAllUser: [User!]!
+  getUserByEmail(email: String!): User!
+}
+
+type User {
+  createdAt: DateTime
+  deletedAt: DateTime
+  email: String!
+  id: ID!
+  name: String!
+  password: String!
+  updatedAt: DateTime
+}
