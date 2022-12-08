@@ -31,7 +31,7 @@ export class User {
     updatedAt: Date
 
     @Field({nullable: true})
-    @DeleteDateColumn({type: 'timestamp', nullable: true})
+    @DeleteDateColumn({type: 'timestamp', nullable: true, default: null})
     deletedAt?: Date
 
     @BeforeInsert()

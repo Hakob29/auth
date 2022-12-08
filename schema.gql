@@ -31,8 +31,10 @@ scalar DateTime
 
 type Mutation {
   deleteUser(deleteUser: DataExistedInputs!): User!
+  getDeletedUser(deletedUser: DataExistedInputs!): User!
   login(login: DataLoginInputs!): User!
   register(register: DataRegisterInputs!): User!
+  restoreUser(restoreUser: DataExistedInputs!): User!
   updateUser(existedData: DataExistedInputs!, updatedData: DataUpdateInputs!): User!
 }
 

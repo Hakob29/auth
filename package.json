@@ -26,6 +26,8 @@
     "migration:revert": "npm run typeorm -- migration:revert"
   },
   "dependencies": {
+    "@nestjs-query/query-graphql": "^0.30.0",
+    "@nestjs-query/query-typeorm": "^0.30.0",
     "@nestjs/apollo": "^10.1.6",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^2.2.0",
@@ -37,6 +39,7 @@
     "@nestjs/typeorm": "^9.0.1",
     "apollo-server-express": "^3.11.1",
     "bcrypt": "^5.1.0",
+    "class-transformer": "^0.5.1",
     "cross-var": "^1.1.0",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
