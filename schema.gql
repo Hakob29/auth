@@ -29,16 +29,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type LoggedUserOutput {
+  access_token: String
+  user: User!
+}
+
 type Mutation {
   deleteUser(deleteUser: DataExistedInputs!): User!
   getDeletedUser(deletedUser: DataExistedInputs!): User!
-  login(login: DataLoginInputs!): User!
+  login(login: DataLoginInputs!): LoggedUserOutput!
   register(register: DataRegisterInputs!): User!
   restoreUser(restoreUser: DataExistedInputs!): User!
   updateUser(existedData: DataExistedInputs!, updatedData: DataUpdateInputs!): User!
 }
 
 type Query {
+  getAllDeletedUsers: [User!]!
   getAllUser: [User!]!
   getUserByEmail(email: String!): User!
 }

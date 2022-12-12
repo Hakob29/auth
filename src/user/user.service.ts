@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { DataUpdateInputs } from './inputs/data-update.inputs';
 import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
@@ -19,20 +19,21 @@ export class UserService extends TypeOrmQueryService<User> {
 
 
     //GET ALL USERS
-    async getAllUser(){
-        return await this.userRepository.find();
+    async getAllUser(): Promise<User[]>{
+         return await this.userRepository.find();
+ 
     } 
 
     //GET USER BY EMAIL
-    async getUserByEmail(email: string){
-        const existedUser = await this.userRepository.findOne({where: {email: email}});
+    async getUserByEmail(email: string): Promise<User>{
+        const existedUser: User = await this.userRepository.findOne({where: {email: email}});
         if(!existedUser) throw new Error('User Not Found...');
         return existedUser;
     }
 
     //UPDATE USER 
-    async updateUser(dataExistedInputs: DataExistedInputs, dataUpdateInputs: DataUpdateInputs){
-        const existedUser = await this.userRepository.findOne({where:{email: dataExistedInputs.email}})
+    async updateUser(dataExistedInputs: DataExistedInputs, dataUpdateInputs: DataUpdateInputs): Promise<User>{
+        const existedUser: User = await this.userRepository.findOne({where:{email: dataExistedInputs.email}})
          if(!existedUser) throw new Error('User Not Found...');
          if(!await bcrypt.compare(dataExistedInputs.password, existedUser.password)) throw new Error('Wrong Password...');
          await this.userRepository.update(existedUser.id, {
@@ -45,33 +46,45 @@ export class UserService extends TypeOrmQueryService<User> {
     }
 
     //DELETE USER
-    async deleteUser(dataExistedInputs: DataExistedInputs){
-        const existedUser = await this.userRepository.findOne({where:{email: dataExistedInputs.email}})
+    async deleteUser(dataExistedInputs: DataExistedInputs):Promise<UpdateResult>{
+        const existedUser: User = await this.userRepository.findOne({where:{email: dataExistedInputs.email}})
         if(!existedUser) throw new Error('User Not Found...');
         if(!await bcrypt.compare(dataExistedInputs.password, existedUser.password)) throw new Error('Wrong Password...');
         return await this.userRepository.softDelete(existedUser.id)
     }
 
     //RESTORE USER
-    async restoreUser(dataExistedInputs: DataExistedInputs){
-        const restoredUser = await this.getDeletedUser(dataExistedInputs);
+    async restoreUser(dataExistedInputs: DataExistedInputs): Promise<User>{
+        const restoredUser: User = await this.getDeletedUser(dataExistedInputs);
          if(!restoredUser) throw new Error("user Not Found...");
          await this.userRepository.restore(restoredUser.id);
          return await this.getUserByEmail(restoredUser.email)
     }
 
-    //GET DELETED USERS
-    async getDeletedUser(dataExistedInputs: DataExistedInputs){
-      const deletedUsers = await this.userRepository.createQueryBuilder("user")
+    //GET ALL DELETED USERS
+    async getAllDeletedUsers(): Promise<User[]>{
+        const deletedUsers: User[] = await this.userRepository.createQueryBuilder("user")
+                                       .withDeleted()
+                                       .where(`user.deletedAt IS NOT NULL`)
+                                       .getMany();
+          if(!deletedUsers) throw new Error("Deleted users don't found...");
+         
+        return deletedUsers;
+    }
+
+
+    //GET DELETED USER
+    async getDeletedUser(dataExistedInputs: DataExistedInputs): Promise<User>{
+      const deletedUsers: User[] = await this.userRepository.createQueryBuilder("user")
                                      .withDeleted()
                                      .where(`user.deletedAt IS NOT NULL`)
                                      .getMany();
         if(!deletedUsers) throw new Error("Deleted users don't found...");
     
 
-        const deletedUser = deletedUsers.map( async (el) => {
+        const deletedUser: Promise<User>[] = deletedUsers.map( async (el) => {
             if(el.email === dataExistedInputs.email && await bcrypt.compare(dataExistedInputs.password, el.password)){
-                return el
+                return el;
             }
         })
         if(!deletedUser[0]) throw new Error("user Not Found...");

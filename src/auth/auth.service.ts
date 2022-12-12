@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/user.entity';
 import { Repository } from 'typeorm';
 import { DataRegisterInputs } from './inputs/data-register.inputs';
-import { DataLoginInputs } from './inputs/login-data.inputs';
+import { DataLoginInputs } from './inputs/data-login.inputs';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class AuthService {
     ){}
 
 // REGISTER USER
-    async register(dataRegisterInputs: DataRegisterInputs){
+    async register(dataRegisterInputs: DataRegisterInputs): Promise<User>{
 
         const existedUser = await this.userRepository.findOne({where: {email: dataRegisterInputs.email}});
         if(existedUser) throw new Error("A user with this email already exists");
@@ -25,7 +25,7 @@ export class AuthService {
     }
 
 //LOGIN USER
-    async login(dataLoginInputs: DataLoginInputs){
+    async login(dataLoginInputs: DataLoginInputs): Promise<any>{
         const expectedUser: User = await this.userRepository.findOne({where: {
             email: dataLoginInputs.email
         }})
@@ -33,12 +33,16 @@ export class AuthService {
         if(!expectedUser){
             throw new Error('User Not Found...');
         }
-        if(!await bcrypt.compare(expectedUser.password, dataLoginInputs.password)){
+        if(!await bcrypt.compare(dataLoginInputs.password, expectedUser.password)){
             throw new Error('Wrong Password...');
         }
-        return await this.userSign(expectedUser.id, expectedUser.email, "User");
+        const jwtString: any = await this.userSign(expectedUser.id, expectedUser.email, "User");
+        return {
+            access_token: jwtString
+        }
     }
 
+    //GET JWT 
     async userSign(userId: number, email: string, type: string): Promise<string>{
         return await this.jwtService.sign({
           sub: userId,
