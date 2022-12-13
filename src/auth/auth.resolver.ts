@@ -9,17 +9,17 @@ import { LoggedUserOutput } from './logged-user.output';
 export class AuthResolver {
     constructor(
         private readonly authService: AuthService
-    ){}
+    ) { }
 
     //REGISTER
     @Mutation(() => User)
-    async register(@Args('register') dataRegisterInputs: DataRegisterInputs): Promise<User>{
+    async register(@Args('register') dataRegisterInputs: DataRegisterInputs): Promise<User> {
         return await this.authService.register(dataRegisterInputs);
     }
 
     //LOGIN
     @Mutation(() => LoggedUserOutput)
-    async login(@Args('login') dataLoginInputs: DataLoginInputs){
+    async login(@Args('login') dataLoginInputs: DataLoginInputs) {
         return await this.authService.login(dataLoginInputs);
     }
 }

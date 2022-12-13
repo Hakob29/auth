@@ -8,7 +8,7 @@ async function bootstrap() {
   const host = config.get("HOST");
   const port = config.get("PORT");
   await app.listen(port || 3001, () => {
-    console.log(`Server has been connected to ${host+port}`);
+    console.log(`Server has been connected to ${host + port}`);
   });
 }
 bootstrap();

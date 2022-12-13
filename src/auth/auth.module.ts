@@ -17,4 +17,4 @@ dotenv.config();
   ],
   providers: [AuthResolver, AuthService]
 })
-export class AuthModule {}
+export class AuthModule { }

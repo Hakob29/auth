@@ -4,10 +4,10 @@ import { User } from 'src/user/user.entity';
 @ObjectType()
 export class LoggedUserOutput {
 
-  @Field({nullable: true})
+  @Field({ nullable: true })
   access_token: string;
 
   @Field(() => User)
   user: User
-  
+
 }

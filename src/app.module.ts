@@ -11,7 +11,7 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({isGlobal: true}),
+    ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(OrmConfig.options),
     GraphQLModule.forRoot({
       driver: ApolloDriver,
@@ -24,4 +24,4 @@ import { UserModule } from './user/user.module';
   controllers: [],
   providers: [JwtStrategy],
 })
-export class AppModule {}
+export class AppModule { }

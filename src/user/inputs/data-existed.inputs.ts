@@ -1,12 +1,12 @@
 import { Field, InputType } from "@nestjs/graphql"
 
 @InputType()
-export class DataExistedInputs{
+export class DataExistedInputs {
 
-    @Field({nullable: false})
+    @Field({ nullable: false })
     email: string
 
-    @Field({nullable: false})
-    password : string
+    @Field({ nullable: false })
+    password: string
 
 }
