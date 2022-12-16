@@ -1,14 +1,20 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from 'src/user/user.entity';
 import { AuthService } from './auth.service';
 import { DataRegisterInputs } from './inputs/data-register.inputs';
 import { DataLoginInputs } from './inputs/data-login.inputs';
-import { LoggedUserOutput } from './logged-user.output';
+import { LoggedUserOutput } from './outputs/logged-user.output';
+import { Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { StripeCustomerOutput } from './outputs/stripe-Customer.output';
+import { DataStripeInputs } from './inputs/data-stripe.inputs';
 
 @Resolver()
 export class AuthResolver {
     constructor(
-        private readonly authService: AuthService
+        @Inject('PAYMENT_SERVICE')
+        private readonly client: ClientProxy,
+        private readonly authService: AuthService,
     ) { }
 
     //REGISTER
@@ -20,6 +26,13 @@ export class AuthResolver {
     //LOGIN
     @Mutation(() => LoggedUserOutput)
     async login(@Args('login') dataLoginInputs: DataLoginInputs) {
+        this.client.emit("hello", "Hello from RabitMQ")
         return await this.authService.login(dataLoginInputs);
+    }
+
+    //CREATE STRIPE ACCOUNT
+    @Mutation(() => StripeCustomerOutput)
+    async createStripeAccount(dataStripeInputs: DataStripeInputs) {
+        return this.client.emit("createCustomer", dataStripeInputs);
     }
 }
