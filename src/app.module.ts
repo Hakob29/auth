@@ -2,11 +2,10 @@ import { ApolloDriver } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ClientsModule, Transport } from '@nestjs/microservices';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrmConfig } from 'ormconfig';
 import { AuthModule } from './auth/auth.module';
-import { JwtStrategy } from './auth/strategy/jwt.strategy';
+import { JwtStrategy } from './auth/strategy/jwt-strategy';
 import { UserModule } from './user/user.module';
 
 

@@ -4,10 +4,13 @@ import { AuthService } from './auth.service';
 import { DataRegisterInputs } from './inputs/data-register.inputs';
 import { DataLoginInputs } from './inputs/data-login.inputs';
 import { LoggedUserOutput } from './outputs/logged-user.output';
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { StripeCustomerOutput } from './outputs/stripe-Customer.output';
 import { DataStripeInputs } from './inputs/data-stripe.inputs';
+import { CurrentUser } from './strategy/current-user';
+import { GqlAuthGuard } from 'src/auth/strategy/jwt-auth.guard';
+
 
 @Resolver()
 export class AuthResolver {
@@ -31,8 +34,9 @@ export class AuthResolver {
     }
 
     //CREATE STRIPE ACCOUNT
-    @Mutation(() => StripeCustomerOutput)
-    async createStripeAccount(dataStripeInputs: DataStripeInputs) {
-        return this.client.emit("createCustomer", dataStripeInputs);
+    @Query(() => StripeCustomerOutput)
+    @UseGuards(GqlAuthGuard)
+    async createStripeAccount(@CurrentUser() user: User) {
+        return this.client.emit("createCustomer", user);
     }
 }

@@ -44,9 +44,15 @@ type Mutation {
 }
 
 type Query {
+  createStripeAccount: StripeCustomerOutput!
   getAllDeletedUsers: [User!]!
   getAllUser: [User!]!
   getUserByEmail(email: String!): User!
+}
+
+type StripeCustomerOutput {
+  name: String
+  user_id: String
 }
 
 type User {
