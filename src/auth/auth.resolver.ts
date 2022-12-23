@@ -34,9 +34,9 @@ export class AuthResolver {
     }
 
     //CREATE STRIPE ACCOUNT
-    @Query(() => StripeCustomerOutput)
+    @Mutation(() => StripeCustomerOutput)
     @UseGuards(GqlAuthGuard)
-    async createStripeAccount(@CurrentUser() user: User) {
-        return this.client.emit("createCustomer", user);
+    async createStripeAccount(@Args("createCustomer") data: DataStripeInputs) {
+        this.client.emit("createCustomer", data);
     }
 }

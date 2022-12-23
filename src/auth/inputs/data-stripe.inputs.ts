@@ -1,9 +1,14 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { User } from "src/user/user.entity";
 
 @InputType()
 export class DataStripeInputs {
 
-    @Field(() => User)
-    user: User
+    @Field({ nullable: false })
+    name: string
+
+    @Field({ nullable: false })
+    email: string
+
+    @Field({ nullable: true })
+    description: string
 }

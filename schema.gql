@@ -18,6 +18,12 @@ input DataRegisterInputs {
   password: String!
 }
 
+input DataStripeInputs {
+  description: String
+  email: String!
+  name: String!
+}
+
 input DataUpdateInputs {
   email: String!
   name: String!
@@ -35,6 +41,7 @@ type LoggedUserOutput {
 }
 
 type Mutation {
+  createStripeAccount(createCustomer: DataStripeInputs!): StripeCustomerOutput!
   deleteUser(deleteUser: DataExistedInputs!): User!
   getDeletedUser(deletedUser: DataExistedInputs!): User!
   login(login: DataLoginInputs!): LoggedUserOutput!
@@ -44,7 +51,6 @@ type Mutation {
 }
 
 type Query {
-  createStripeAccount: StripeCustomerOutput!
   getAllDeletedUsers: [User!]!
   getAllUser: [User!]!
   getUserByEmail(email: String!): User!
